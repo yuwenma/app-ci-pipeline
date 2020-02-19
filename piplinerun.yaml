@@ -1,0 +1,18 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineRun
+metadata:
+  name: "[RUN]" # {"type":"string","x-kustomize":{"setter":{"name":"pipeline-run", "value": "[RUN]"}}}
+  namespace: "[PIPELINE-NAMESPACE]" # {"type":"string","x-kustomize":{"setter":{"name": "pipeline-namespace", "value": "[PIPELINE-NAMESPACE]"}}}
+spec:
+  resources:
+  - name: source-repo
+    resourceRef:
+      name: app-git-repo
+  - name: web-image
+    resourceRef:
+      name: guestbook-web-image
+  - name: app-image
+    resourceRef:
+      name: guestbook-app-image
+  pipelineRef:
+    name: demo-pipeline

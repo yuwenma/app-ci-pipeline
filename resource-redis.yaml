@@ -1,0 +1,10 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: guestbook-app-image
+  namespace: "[PIPELINE-NAMESPACE]" # {"type":"string","x-kustomize":{"setter":{"name": "pipeline-namespace", "value": "[PIPELINE-NAMESPACE]"}}}
+spec:
+  type: image
+  params:
+  - name: url
+    value: "[REDIS-GCR-IMG]" # {"type":"string","x-kustomize":{"setter":{"name":"redis-img", "value": "[REDIS-GCR-IMG]"}}}

@@ -1,0 +1,34 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: build-and-push
+  namespace: "[PIPELINE-NAMESPACE]" # {"type":"string","x-kustomize":{"setter":{"name": "pipeline-namespace", "value": "[PIPELINE-NAMESPACE]"}}}
+spec:
+  inputs:
+    resources:
+    - name: workspace
+      type: git
+    params:
+    - name: pathToDockerFile
+      default: /workspace/workspace/php-redis/Dockerfile
+      description: The path to the dockerfile to build
+    - name: pathToContext
+      default: /workspace/workspace
+      description: The build context used by Kaniko (https://github.com/GoogleContainerTools/kaniko#kaniko-build-contexts)
+  outputs:
+    resources:
+    - name: builtImage
+      type: image
+  steps:
+  - name: build-and-push
+    image: gcr.io/kaniko-project/executor:v0.15.0
+    command:
+    - /kaniko/executor
+    args:
+    - --dockerfile=$(inputs.params.pathToDockerFile)
+    - --destination=$(outputs.resources.builtImage.url)
+    - --context=$(inputs.params.pathToContext)
+    # specifying DOCKER_CONFIG is required to allow kaniko to detect docker credential
+    env:
+    - name: "DOCKER_CONFIG"
+      value: "/tekton/home/.docker/"
