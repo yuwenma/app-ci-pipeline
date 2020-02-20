@@ -1,0 +1,42 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: default-cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: '[PIPELINE-NAMESPACE]' # {"type":"string","x-kustomize":{"setter":{"name":"pipeline-namespace","value":"[PIPELINE-NAMESPACE]"}}}
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: default
+  namespace: '[PIPELINE-NAMESPACE]' # {"type":"string","x-kustomize":{"setter":{"name":"pipeline-namespace","value":"[PIPELINE-NAMESPACE]"}}}
+secrets:
+- name: kaniko-secret
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kaniko-secret
+  namespace: '[PIPELINE-NAMESPACE]' # {"type":"string","x-kustomize":{"setter":{"name":"pipeline-namespace","value":"[PIPELINE-NAMESPACE]"}}}
+type: Opaque
+stringData:
+  # WARNING: BELOW SHOULD BE REPLACED WITH YOUR OWN GCP SERVICE_ACCOUNT JSON KEY FILE.
+  kaniko-secret.json: |-
+    {
+      "type": "service_account",
+      "project_id": "yuwenma-gke-playground",
+      "private_key_id": "a2f2d7290ebbadad69d44192871bce7f9528fb8c",
+      "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCe0j7ENHjugiGP\n+GifG3E1dy3Gs4UQyLyTrH3Lr/24VnhAJV9hobKsMvp5boeHpF4Fp5eaiV6ttK5b\nJRpb5JqDIt6NZ3uAM8uEreO/r/oW1cnCDy6Mkg1mkjrPFILvyInTZF2xmLi2ffIM\nn+lo1Uw33ItTCjecAHnSzzAzBvHdtOu7UN/GC7JN8mwYycMS1ZHdMbKByd2NEcDg\ny2KxadZTHxaieHJBsjfvySkOswp/IpUtiB5DfPcGGMdOyxGF5jZchlAi24tiK3x7\nKnZACopa0zcnRFG2MIvv4to0AEoIVhKVgXTMOVc/KutsJ+eJNzoqHGSn5b23+hPl\n/syt2QPVAgMBAAECggEABAKVfKFBi24kOE0ioR/RgjLV6E44liWnY0gn7fht3NVs\nGFyJNb8eMoxf+ChzChj7mcNzR77fsd2dyGXdrkPNpfF/sozSGLjWEu3MEhc4ppJz\n029MMtbuOTCIhRmEu9axqjF+zyDmyw7PiYORImk+USvDpc9ce5ckfE7obeVnPnyM\neYz92i+f9PNoD4HxivvPq8mJIPfxUjkjrJUm6ShYjlXip9+ExykifXM0iEa6AHM5\nRAyRTP9ks9iF6ID2wWSXIUeEz3MaFLE4ThA3D1jhruIsaG8DfpsQnoYiR4WnWR6Q\n5pDVBCdatbyPNc7a1WLzUogqUvzYREmQHO+QXhqpAQKBgQDfkbAEYrdi2zw7nCtL\nIKBytWVPV4IGCerVhrjDnFcrTutTwoGffvXqp6Qgjs4Nb9QGuJ1P+l59xhcwp/ed\nGhZ6M1d1Bv/VTfVb5Y30N8eiquRL7H6UpKJ0j8Th5Q7Amvq95ogFJBNjjczCLDPr\nai8Y3MV9tJ3vUw0OcBUxq/nY1QKBgQC13CAx9RDp6RVBK2+zZzoCex1F4ulPbC8s\nXxbCxYOl2CifrYqpCiVc2vgh6bZNNXwBtZJMZlQWR0f6qj/TM2gAQHF7T9pkO4mh\nX0SJ1dYQhv875Gt6hsZA5nqXjeFtxRajXq8968ZdV9Qh/8dUiYDEwHs93xqXuU5F\nAZ+b6Nf/AQKBgAmjFQxLWQ5Y1vLW24LkiCYJrbFK2175RHcp1IMSFSvXvgshQkcm\nyODxkwCYR0eK/3++q4FMEJCpXkyJoQHTow5nciioQZTnRGFOttzFHsTjSu3+5sHv\nitUtcVYvcoBY7eALtOdL084hyabBEwfdzuPqeFTf2UL8uH5b1H4MpLt1AoGAehob\nu68Q9hw62xCw5MFwH25Nzzh08ZBvc9k8TPWUWGtzixJXwPtA7sFOTGbAscIxSmyA\nl6800eh2GYTpaYJgV5rtFqAcv6OB2sk+GVVrbplVEP9icle/EKAuu0bVjn//nRzb\niDWfb9iiY1l6mfXgcTnTBU2gazJNrONUKLgDHgECgYEAmjCKifau9pNM6s2grTo0\n50gu/PtzZXuvSF5lt8gzPCyRA3ztDTJzkpBmkp2NYzVyRErE+24m/QbaYn1ien66\nrfOd1ZHlKxhr2tgZcMHZA+trnIi/zwbvJNBtSwahEp6OpP4oH7WlWrqc7GydYEcZ\n06rrzxEc+5xWUgkNZXvFycE=\n-----END PRIVATE KEY-----\n",
+      "client_email": "pipeline-quickstart-robot@yuwenma-gke-playground.iam.gserviceaccount.com",
+      "client_id": "108370431538100808553",
+      "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+      "token_uri": "https://oauth2.googleapis.com/token",
+      "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+      "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/pipeline-quickstart-robot%40yuwenma-gke-playground.iam.gserviceaccount.com"
+    }

@@ -2,7 +2,7 @@ apiVersion: tekton.dev/v1alpha1
 kind: Task
 metadata:
   name: build-and-push
-  namespace: "[PIPELINE-NAMESPACE]" # {"type":"string","x-kustomize":{"setter":{"name": "pipeline-namespace", "value": "[PIPELINE-NAMESPACE]"}}}
+  namespace: "[PIPELINE-NAMESPACE]" # {"type":"string","x-kustomize":{"setter":{"name":"pipeline-namespace","value":"[PIPELINE-NAMESPACE]"}}}
 spec:
   inputs:
     resources:
@@ -30,5 +30,12 @@ spec:
     - --context=$(inputs.params.pathToContext)
     # specifying DOCKER_CONFIG is required to allow kaniko to detect docker credential
     env:
-    - name: "DOCKER_CONFIG"
-      value: "/tekton/home/.docker/"
+    - name: GOOGLE_APPLICATION_CREDENTIALS
+      value: /secret/kaniko-secret.json
+    volumeMounts:
+    - name: kaniko-secret
+      mountPath: /secret
+  volumes:
+  - name: kaniko-secret
+    secret:
+      secretName: kaniko-secret

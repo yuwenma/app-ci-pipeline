@@ -1,8 +1,8 @@
 apiVersion: tekton.dev/v1alpha1
 kind: PipelineRun
 metadata:
-  name: "[RUN]" # {"type":"string","x-kustomize":{"setter":{"name":"pipeline-run", "value": "[RUN]"}}}
-  namespace: "[PIPELINE-NAMESPACE]" # {"type":"string","x-kustomize":{"setter":{"name": "pipeline-namespace", "value": "[PIPELINE-NAMESPACE]"}}}
+  name: '[RUN]' # {"type":"string","x-kustomize":{"setter":{"name":"pipeline-run","value":"[RUN]"}}}
+  namespace: '[PIPELINE-NAMESPACE]' # {"type":"string","x-kustomize":{"setter":{"name":"pipeline-namespace","value":"[PIPELINE-NAMESPACE]"}}}
 spec:
   resources:
   - name: source-repo
@@ -16,3 +16,4 @@ spec:
       name: guestbook-app-image
   pipelineRef:
     name: demo-pipeline
+  serviceAccountName: 'default'

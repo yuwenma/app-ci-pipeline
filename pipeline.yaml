@@ -2,7 +2,7 @@ apiVersion: tekton.dev/v1alpha1
 kind: Pipeline
 metadata:
   name: demo-pipeline
-  namespace: "[PIPELINE-NAMESPACE]" # {"type":"string","x-kustomize":{"setter":{"name": "pipeline-namespace", "value": "[PIPELINE-NAMESPACE]"}}}
+  namespace: '[PIPELINE-NAMESPACE]' # {"type":"string","x-kustomize":{"setter":{"name":"pipeline-namespace","value":"[PIPELINE-NAMESPACE]"}}}
 spec:
   resources:
   - name: source-repo
@@ -42,3 +42,5 @@ spec:
       value: /workspace/workspace/redis-slave/
     taskRef:
       name: build-and-push
+    runAfter:
+    - build-frontend
